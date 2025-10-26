@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GLASS MENU</title>
+
+<!-- DynaPuff Font -->
+<link href="https://fonts.googleapis.com/css2?family=DynaPuff:wght@700&display=swap" rel="stylesheet">
+
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body, html { height:100%; overflow:hidden; font-family:'DynaPuff', cursive; color:white; }
+
+  /* Background GIF */
+  .bg { 
+    position:fixed; top:0; left:0; width:100%; height:100%; 
+    background:url('https://github.com/GoonerTest/itwasnetme/blob/main/pinterest_611293349426124469.gif?raw=true') center/cover no-repeat;
+    filter:blur(20px) brightness(0.6); z-index:-2; 
+  }
+  .overlay { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.25); z-index:-1; }
+
+  .center { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); display:flex; flex-direction:column; align-items:center; gap:30px; }
+
+  /* Glass Menu */
+  .menu { width:300px; padding:30px 20px; border-radius:25px; background:rgba(255,255,255,0.08); backdrop-filter:blur(15px); border:1px solid rgba(255,255,255,0.2); box-shadow:0 0 25px rgba(255,255,255,0.2); text-align:center; transition:all 0.4s ease; }
+  .menu:hover { animation:glowPulse 1s ease forwards; transform:scale(1.02); }
+  @keyframes glowPulse {0%{border-color:rgba(255,255,255,0.2);box-shadow:0 0 25px rgba(255,255,255,0.2);}50%{border-color:white;box-shadow:0 0 30px 5px rgba(255,255,255,0.8),0 0 60px 10px rgba(255,255,255,0.4);}100%{border-color:rgba(255,255,255,0.3);box-shadow:0 0 25px rgba(255,255,255,0.3);}}
+
+  .menu img.profile { width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid white;box-shadow:0 0 25px white; margin-bottom:20px;}
+  .menu h1 { font-size:1.8em;text-shadow:0 0 10px white,0 0 20px white;margin-bottom:20px;}
+  
+  .buttons { display:flex; justify-content:center; gap:15px; }
+  .buttons a { display:flex; align-items:center; justify-content:center; width:60px; height:60px; border-radius:15px; transition:all 0.3s ease; overflow:hidden; }
+  .buttons a img { width:100%; height:100%; object-fit:contain; transition:all 0.3s ease; }
+  .buttons a:hover img { filter: drop-shadow(0 0 15px white) drop-shadow(0 0 20px white); transform:scale(1.1); }
+
+  /* Music Player Box */
+  .player { width:500px; padding:20px 30px; border-radius:20px; background: rgba(255,255,255,0.1); backdrop-filter: blur(15px); border:1px solid rgba(255,255,255,0.2); box-shadow:0 0 25px rgba(255,255,255,0.2); text-align:center; }
+  .player h2 { font-size:1.2em; margin-bottom:15px; text-shadow:0 0 10px white,0 0 20px white;}
+  .player-content { display:flex; align-items:center; justify-content:center; gap:25px;}
+  .album { 
+    width:90px; height:90px; border-radius:15px; object-fit:cover; border:2px solid white; 
+    box-shadow:0 0 20px white; 
+    animation:albumGlow 2s infinite alternate;
+  }
+
+  @keyframes albumGlow {
+    0% { box-shadow:0 0 15px white; }
+    50% { box-shadow:0 0 25px white; }
+    100% { box-shadow:0 0 15px white; }
+  }
+
+  .controls { display:flex; align-items:center; justify-content:space-between; width:140px; font-size:32px; cursor:pointer; color:white; text-shadow:0 0 5px white,0 0 10px white; transition:all 0.3s ease; }
+  .controls span:hover { transform:scale(1.3); text-shadow:0 0 15px white,0 0 25px white; }
+
+  /* Glowing/Pulsing Progress Bar */
+  .progress-container { width:100%; height:8px; background:rgba(255,255,255,0.2); border-radius:4px; margin-top:15px; cursor:pointer; overflow:hidden; backdrop-filter:blur(5px); box-shadow:0 0 10px rgba(255,255,255,0.6);}
+  .progress { 
+    width:0%; 
+    height:100%; 
+    background: linear-gradient(90deg, rgba(255,255,255,0.8), white); 
+    box-shadow:0 0 15px white,0 0 20px white inset; 
+    border-radius:4px; 
+    transition: width 0.1s linear;
+    animation: progressGlow 2s infinite alternate;
+  }
+  @keyframes progressGlow {
+    0% { box-shadow:0 0 15px white, 0 0 20px white inset; }
+    50% { box-shadow:0 0 25px white, 0 0 35px white inset; }
+    100% { box-shadow:0 0 15px white, 0 0 20px white inset; }
+  }
+  .time-display { display:flex; justify-content:space-between; font-size:0.9em; margin-top:4px; text-shadow:0 0 5px white; }
+
+  /* Start Screen */
+  .start-screen { position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:10; display:flex; align-items:center; justify-content:center; cursor:pointer; opacity:1; transition:opacity 1s ease; }
+  .start-screen h1 { font-family:'DynaPuff', cursive; font-size:3em; color:white; text-shadow:0 0 10px white,0 0 20px white; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{text-shadow:0 0 10px white,0 0 20px white; transform:scale(1);}50%{text-shadow:0 0 25px white,0 0 40px white; transform:scale(1.05);} }
+</style>
+
+<!-- Animated Browser Title -->
+<script>
+  const titleSequence = [
+    "S","SY","SYS","SYS.","SYS.I","SYS.IN","SYS.INF","SYS.INFO",
+    "SYS.INF","SYS.IN","SYS.I","SYS.","SYS","SY","S"
+  ];
+  let titleIndex = 0;
+  setInterval(() => {
+    document.title = titleSequence[titleIndex];
+    titleIndex = (titleIndex + 1) % titleSequence.length;
+  }, 300); // adjust speed here
+</script>
+
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<!-- Start Screen -->
+<div class="start-screen" id="startScreen">
+  <h1>Click to Enter</h1>
+</div>
+
+<div class="center">
+
+  <!-- Main Glass Menu -->
+  <div class="menu" id="mainMenu">
+    <img class="profile" src="https://github.com/GoonerTest/itwasnetme/blob/main/IMG_2498.webp?raw=true" alt="Profile">
+    <h1>ROOTSYS64</h1>
+    <div class="buttons">
+      <!-- Roblox -->
+      <a href="https://www.roblox.com/users/1529186220/profile" target="_blank">
+        <img src="https://userstyles.org/style_screenshots/250841_after.png?r=1760878892" alt="Roblox">
+      </a>
+      <!-- TikTok -->
+      <a href="https://www.tiktok.com/@rootsys64" target="_blank">
+        <img src="https://www.freepnglogos.com/uploads/tik-tok-logo/white-transparent-tiktok-logo-png-2.png" alt="TikTok">
+      </a>
+      <!-- YouTube -->
+      <a href="https://www.youtube.com/@ROOTSYS64" target="_blank">
+        <img src="https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/youtube-app-white-icon.png" alt="YouTube">
+      </a>
+    </div>
+  </div>
+
+  <!-- Music Player Box -->
+  <div class="player">
+    <h2>I DOX ALONE - JAMES BANDZ</h2>
+    <div class="player-content">
+      <img class="album" src="https://github.com/GoonerTest/itwasnetme/blob/main/SpotiDown.App%20-%20I%20DOX%20ALONE%20-%20James%20Bandz.jpeg?raw=true" alt="Album">
+      <div class="controls">
+        <span id="backward">&lt;</span>
+        <span id="playPause">▶</span>
+        <span id="forward">&gt;</span>
+      </div>
+    </div>
+    <div class="progress-container" id="progressContainer">
+      <div class="progress" id="progress"></div>
+    </div>
+    <div class="time-display">
+      <span id="currentTime">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+    <audio id="audio" src="https://github.com/GoonerTest/itwasnetme/raw/refs/heads/main/SpotiDown.App%20-%20I%20DOX%20ALONE%20-%20James%20Bandz.mp3"></audio>
+  </div>
+
+</div>
+
+<script>
+const startScreen = document.getElementById('startScreen');
+const audio = document.getElementById('audio');
+const playPause = document.getElementById('playPause');
+const forward = document.getElementById('forward');
+const backward = document.getElementById('backward');
+const progress = document.getElementById('progress');
+const progressContainer = document.getElementById('progressContainer');
+const currentTimeEl = document.getElementById('currentTime');
+const durationEl = document.getElementById('duration');
+
+function formatTime(seconds){
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60).toString().padStart(2,'0');
+  return `${m}:${s}`;
+}
+
+// Start screen click
+startScreen.addEventListener('click', () => {
+  startScreen.style.opacity = 0;
+  setTimeout(()=> startScreen.style.display = 'none',1000);
+  audio.play();
+  playPause.textContent = '⏸';
+});
+
+// Play / Pause
+playPause.addEventListener('click', () => {
+  if(audio.paused){ audio.play(); playPause.textContent='⏸'; }
+  else{ audio.pause(); playPause.textContent='▶'; }
+});
+
+// Skip forward/backward 5s
+forward.addEventListener('click',()=>{ audio.currentTime = Math.min(audio.duration, audio.currentTime + 5); });
+backward.addEventListener('click',()=>{ audio.currentTime = Math.max(0, audio.currentTime - 5); });
+
+// Update progress
+audio.addEventListener('timeupdate', () => {
+  const percent = (audio.currentTime / audio.duration) * 100;
+  progress.style.width = percent + '%';
+  currentTimeEl.textContent = formatTime(audio.currentTime);
+});
+
+// Set duration when metadata loads
+audio.addEventListener('loadedmetadata', () => { durationEl.textContent = formatTime(audio.duration); });
+
+// Click to seek
+progressContainer.addEventListener('click', (e) => {
+  const rect = progressContainer.getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const percent = x / rect.width;
+  audio.currentTime = percent * audio.duration;
+});
+</script>
+
+</body>
+</html>
